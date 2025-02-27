@@ -28,7 +28,7 @@ export default function MemeUploadPage() {
         className="absolute inset-0 w-full h-full transition-colors -z-10"
       />
 
-      <div className="h-screen flex flex-1 items-center justify-center">
+      <div className="h-screen flex flex-1 items-center justify-center sm:mx-0 mx-4">
         <MemeUpload />
       </div>
     </motion.div>

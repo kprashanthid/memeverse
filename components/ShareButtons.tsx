@@ -21,7 +21,7 @@ export default function ShareButtons({ memeUrl }: { memeUrl: string }) {
         href={twitterShareUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        className="bg-blue-500 text-white sm:px-4 px-2 py-2 rounded-md sm:text-[10px] text-[5px]"
       >
         Share on Twitter
       </a>
@@ -29,14 +29,14 @@ export default function ShareButtons({ memeUrl }: { memeUrl: string }) {
         href={facebookShareUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-blue-700 text-white px-4 py-2 rounded-md"
+        className="bg-blue-700 text-white sm:px-4 px-2 py-2 rounded-md sm:text-[10px] text-[5px]"
       >
         Share on Facebook
       </a>
 
       <button
         onClick={copyToClipboard}
-        className="bg-gray-500 text-white px-4 py-2 rounded-md"
+        className="bg-gray-500 text-white sm:px-4 px-2 py-2 rounded-md sm:text-[10px] text-[5px]"
       >
         {copied ? "Copied!" : "Copy Link"}
       </button>

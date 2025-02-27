@@ -65,7 +65,7 @@ export default function ProfilePage() {
             : "linear-gradient(to bottom, #ffffff, #f3f4f6, #e5e7eb)",
         }}
         transition={{ duration: 1 }}
-        className="absolute inset-0 w-full h-full transition-colors -z-10"
+        className="absolute inset-0 w-full h-full transition-colors -z-10 sm:px-0 px-4"
       />
       <button
         onClick={() => {
@@ -76,10 +76,10 @@ export default function ProfilePage() {
       >
         {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </button>
-      <div className="bg-gray-200 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center w-full max-w-md mt-20">
+      <div className="bg-gray-200 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center w-full max-w-md mt-20 ">
         <label htmlFor="avatar-upload" className="cursor-pointer">
           <Image
-            src={profile.avatar}
+            src={profile.avatar || zoro}
             alt="Profile Avatar"
             width={100}
             height={100}
@@ -124,6 +124,8 @@ export default function ProfilePage() {
               className="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg shadow-md"
             >
               <Image
+                width={300}
+                height={300}
                 src={meme.url}
                 alt={meme.name}
                 className="sm:w-full rounded-md sm:h-60 h-40 w-full"

@@ -8,11 +8,11 @@ import CommentSection from "@/components/CommentSection";
 import ShareButtons from "@/components/ShareButtons";
 import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import zoro from "../../profile/zoro.jpg";
 
 type Profile = {
-  avatar: string;
+  avatar: string | StaticImageData;
 };
 
 export default function MemeDetails() {
@@ -25,7 +25,7 @@ export default function MemeDetails() {
   ]);
 
   const [profile, setProfile] = useState<Profile>({
-    avatar: "/profile/zoro.jpg",
+    avatar: zoro,
   });
 
   useEffect(() => {
@@ -36,8 +36,10 @@ export default function MemeDetails() {
   }, []);
 
   const [loading, setLoading] = useState(true);
-  const meme = memes.find((m) => String(m.id) === id);
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
+  const likedMemes = useSelector((state: RootState) => state.memes.likedMemes);
+  const meme = memes.find((m) => String(m.id) === id) || null;
+  const isLiked = meme ? likedMemes.some((m) => m.id === meme.id) : false;
 
   useEffect(() => {
     if (!meme) {
@@ -98,21 +100,30 @@ export default function MemeDetails() {
           transition={{ duration: 0.5 }}
           className="w-full"
         >
-          <Image
-            src={meme.url}
-            alt={meme.name}
-            width={500}
-            height={500}
-            className="w-full rounded-md"
-          />
+          {meme ? (
+            <Image
+              src={meme.url || zoro}
+              alt={meme.name || "Meme Image"}
+              width={500}
+              height={500}
+              className="w-full rounded-md"
+            />
+          ) : (
+            <p className="text-center text-red-500">⚠️ Meme not found!</p>
+          )}
         </motion.div>
-        <div className="flex justify-between p-4">
+        <div className="flex flex-row justify-between p-4">
           <button
             onClick={() => dispatch(toggleLike(meme))}
-            className="text-2xl"
+            className={`w-1/3  px-1 sm:px-6 py-2 text-xs sm:text-sm font-medium rounded-md transition-all ${
+              isLiked
+                ? "bg-red-500 text-white hover:bg-red-600"
+                : "bg-gray-300 dark:bg-gray-600 text-black dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
+            }`}
           >
-            {meme.liked ? "❤️" : "🤍"}
+            {isLiked ? "❤️ Liked" : "🤍 Like"}
           </button>
+
           <ShareButtons memeUrl={meme.url} />
         </div>
         <p className="px-4 text-gray-800 dark:text-white font-semibold">

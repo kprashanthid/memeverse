@@ -137,7 +137,7 @@ export default function HomePage() {
       </h1>
       <motion.div
         animate={controls}
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:p-10 p-5 relative z-10"
+        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:p-10 p-5 relative z-10"
       >
         {uploadedMemes.length > 0 &&
           uploadedMemes.map((meme) => <MemeCard key={meme.id} meme={meme} />)}
