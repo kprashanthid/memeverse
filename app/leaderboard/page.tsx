@@ -44,7 +44,7 @@ export default function LeaderboardPage() {
       .slice(0, 10);
     setLeaderboard(sortedLeaderboard);
     localStorage.setItem("leaderboard", JSON.stringify(sortedLeaderboard));
-  }, [likedMemes, leaderboard]);
+  }, []);
   return (
     <motion.div
       initial={{ opacity: 0 }}

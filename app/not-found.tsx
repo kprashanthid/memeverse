@@ -2,15 +2,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import memeImage from "./meme.png";
 
 const memes = [
   {
-    url: "/404-meme1.jpg",
+    url: memeImage.src,
     caption: "When you realize this page doesn't exist... 😭",
   },
-  { url: "/404-meme2.jpg", caption: "404? More like 4-oh-no! 😂" },
+  { url: memeImage.src, caption: "404? More like 4-oh-no! 😂" },
   {
-    url: "/404-meme3.jpg",
+    url: memeImage.src,
     caption: "This page is as lost as me in math class. 🤯",
   },
 ];
@@ -26,19 +27,10 @@ export default function NotFoundPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
-      <motion.h1
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-5xl font-bold"
-      >
-        404 - Page Not Found
-      </motion.h1>
-
       <motion.img
         src={randomMeme.url}
         alt="404 Meme"
-        className="w-80 mt-6 rounded-lg shadow-lg"
+        className="w-full mt-6 rounded-lg shadow-lg"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
