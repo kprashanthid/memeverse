@@ -31,22 +31,15 @@ export default function MemeUpload() {
 
     try {
       setLoadingCaption(true);
-      // Make API call to generate AI caption
       const response = await axios.post("/api/generateCaption", {
         memeName: name,
       });
 
-      // Log the response to check the data
       console.log("Caption Response:", response.data);
 
-      // Set the generated caption
       setCaption(response.data.caption);
-    } catch (error: any) {
-      // Handle errors and display them
-      console.error(
-        "Error generating AI caption:",
-        error.response?.data || error.message
-      );
+    } catch (error) {
+      console.error("Error generating AI caption:", error);
       alert("Failed to generate AI caption.");
     } finally {
       setLoadingCaption(false);

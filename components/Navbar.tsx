@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkMode } from "@/store/themeSlice";
 import { RootState } from "@/store";
@@ -21,10 +21,8 @@ export default function Navbar({ onSearch, onSortChange }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const debouncedSearch = useCallback(
-    debounce((query: string) => {
-      onSearch(query.toLowerCase());
-    }, 300),
+  const debouncedSearch = useMemo(
+    () => debounce((query: string) => onSearch(query.toLowerCase()), 300),
     [onSearch]
   );
 

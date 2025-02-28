@@ -32,10 +32,6 @@ export default function HomePage() {
     (state: RootState) => state.memes.uploadedMemes
   );
 
-  useEffect(() => {
-    fetchMemes();
-  }, [page]);
-
   const fetchMemes = async () => {
     if (loading) return;
     setLoading(true);
@@ -62,6 +58,10 @@ export default function HomePage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchMemes();
+  }, [page]);
 
   const handleScroll = () => {
     if (

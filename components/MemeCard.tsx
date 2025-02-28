@@ -5,7 +5,6 @@ import { toggleLike } from "@/store/slices/memeSlice";
 import { RootState } from "@/store";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { FaXTwitter, FaFacebookF } from "react-icons/fa6";
 
 type Meme = {
