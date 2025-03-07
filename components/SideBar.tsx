@@ -10,14 +10,14 @@ import { usePathname } from "next/navigation";
 
 type SidebarProps = {
   onSearch?: (query: string) => void;
-  onSortChange?: (sortBy: "likes" | "date" | "comments") => void;
+  // onSortChange?: (sortBy: "likes" | "date" | "comments") => void;
 };
 
-export default function Sidebar({ onSearch, onSortChange }: SidebarProps) {
+export default function Sidebar({ onSearch }: SidebarProps) {
   const dispatch = useDispatch();
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<"likes" | "date" | "comments">("likes");
+  // const [sortBy, setSortBy] = useState<"likes" | "date" | "comments">("likes");
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
