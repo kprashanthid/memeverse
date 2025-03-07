@@ -40,7 +40,7 @@ export default function Navbar({ onSearch, onSortChange }: NavbarProps) {
   }, [darkMode]);
 
   return (
-    <nav className="w-full dark:bg-black shadow-md py-3 px-6 flex justify-between items-center fixed top-0 z-50">
+    <nav className="w-full dark:bg-black bg-white shadow-md py-3 px-6 flex justify-between items-center fixed top-0 z-50">
       <Link href="/">
         <h1 className="text-xl font-bold text-gray-800 dark:text-white">
           MemeVerse 🔥

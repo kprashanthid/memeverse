@@ -53,7 +53,7 @@ export default function Sidebar({ onSearch, onSortChange }: SidebarProps) {
 
       <div className="fixed top-0 left-0 h-full z-50 sm:w-72 dark:bg-gray-900 shadow-2xl flex flex-col items-center py-6 px-4">
         <h1 className="text-xl font-bold  text-white mb-10 ml-4">
-          <Link href="/" className=" text-white py-2">
+          <Link href="/" className=" text-white py-2 text-[30px]">
             MemeVerse 🔥
           </Link>
         </h1>
@@ -66,7 +66,7 @@ export default function Sidebar({ onSearch, onSortChange }: SidebarProps) {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-white w-full mb-4"
             />
-            <select
+            {/* <select
               value={sortBy}
               onChange={(e) => {
                 const newSort = e.target.value as "likes" | "date" | "comments";
@@ -78,11 +78,11 @@ export default function Sidebar({ onSearch, onSortChange }: SidebarProps) {
               <option value="likes">Most Liked</option>
               <option value="date">Newest</option>
               <option value="comments">Most Commented</option>
-            </select>
+            </select> */}
           </>
         )}
 
-        <nav className="flex flex-col w-full gap-10">
+        <nav className="flex flex-col w-full gap-10 font-semibold">
           <Link
             href="/leaderboard"
             className=" text-white py-2 hover:bg-white hover:text-black rounded-md text-center"

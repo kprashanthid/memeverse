@@ -1,15 +1,26 @@
 "use client";
+
 import { useParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { useEffect, useState } from "react";
 import { toggleLike, addFetchedMeme } from "@/store/slices/memeSlice";
 import CommentSection from "@/components/CommentSection";
-import ShareButtons from "@/components/ShareButtons";
 import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
+import {
+  Facebook,
+  Heart,
+  MessageCircle,
+  Share2,
+  Twitter,
+  Clipboard,
+} from "lucide-react";
 import zoro from "../../profile/zoro.jpg";
+import { AnimatedBackground } from "animated-backgrounds";
+import Sidebar from "@/components/SideBar";
+import clsx from "clsx";
 
 type Profile = {
   avatar: string | StaticImageData;
@@ -24,9 +35,13 @@ export default function MemeDetails() {
     ...state.memes.likedMemes,
   ]);
 
-  const [profile, setProfile] = useState<Profile>({
-    avatar: zoro,
-  });
+  const [profile, setProfile] = useState<Profile>({ avatar: zoro });
+  const [showShareOptions, setShowShareOptions] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const darkMode = useSelector((state: RootState) => state.theme.darkMode);
+  const likedMemes = useSelector((state: RootState) => state.memes.likedMemes);
+  const meme = memes.find((m) => String(m.id) === id) || null;
+  const isLiked = meme ? likedMemes.some((m) => m.id === meme.id) : false;
 
   useEffect(() => {
     const savedProfile = localStorage.getItem("userProfile");
@@ -34,12 +49,6 @@ export default function MemeDetails() {
       setProfile(JSON.parse(savedProfile));
     }
   }, []);
-
-  const [loading, setLoading] = useState(true);
-  const darkMode = useSelector((state: RootState) => state.theme.darkMode);
-  const likedMemes = useSelector((state: RootState) => state.memes.likedMemes);
-  const meme = memes.find((m) => String(m.id) === id) || null;
-  const isLiked = meme ? likedMemes.some((m) => m.id === meme.id) : false;
 
   useEffect(() => {
     if (!meme) {
@@ -60,30 +69,51 @@ export default function MemeDetails() {
     }
   }, [id, meme, dispatch]);
 
+  const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+    meme?.url || ""
+  )}&text=Check%20out%20this%20meme!`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    meme?.url || ""
+  )}`;
+
+  const copyToClipboard = () => {
+    if (meme?.url) {
+      navigator.clipboard.writeText(meme.url);
+      alert("Link copied!");
+    }
+  };
+
   if (loading) return <p className="text-center mt-8">🔄 Loading...</p>;
   if (!meme) return <p className="text-center mt-8">⚠️ Meme not found!</p>;
 
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      animate={{
-        background: darkMode
-          ? "linear-gradient(to bottom, #111827, #1f2937, #374151)"
-          : "linear-gradient(to bottom, #ffffff, #f3f4f6, #e5e7eb)",
-      }}
-      transition={{ duration: 1 }}
-      className="min-h-screen flex flex-col lg:flex-row items-center lg:items-start justify-center bg-gray-100 dark:bg-black py-6  sm:px-20 px-10"
+    <div
+      className={clsx(
+        darkMode
+          ? "min-h-screen flex sm:flex-row flex-col  items-center justify-center py-6 sm:px-20 px-10"
+          : "min-h-screen flex sm:flex-row flex-col  items-center justify-center py-6 sm:px-20 px-10 bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient"
+      )}
     >
-      <Navbar onSearch={() => {}} onSortChange={() => {}} />
+      {darkMode && (
+        <AnimatedBackground animationName="starryNight" blendMode="Overlay" />
+      )}
+      <div className="hidden sm:block sm:min-w-80 h-screen">
+        <Sidebar />
+      </div>
 
-      <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg w-full max-w-md lg:max-w-lg lg:w-2/3 sm:mt-32 mt-12">
+      <div className="block sm:hidden w-full">
+        <Navbar />
+      </div>
+
+      {/* Meme Card */}
+      <div className="relative bg-white shadow-lg rounded-xl w-full max-w-md lg:max-w-lg lg:w-2/3">
         <div className="flex items-center p-4 border-b border-gray-300 dark:border-gray-700">
           <Image
             src={profile?.avatar || zoro}
             alt="User Avatar"
             width={40}
             height={40}
-            className="rounded-full"
+            className="rounded-full object-cover aspect-square"
           />
           <div className="ml-3">
             <p className="font-semibold text-gray-800 dark:text-white">
@@ -94,48 +124,96 @@ export default function MemeDetails() {
             </p>
           </div>
         </div>
+
+        {/* Meme Image */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="w-full"
         >
-          {meme ? (
-            <Image
-              src={meme.url || zoro}
-              alt={meme.name || "Meme Image"}
-              width={500}
-              height={500}
-              className="w-full rounded-md"
-            />
-          ) : (
-            <p className="text-center text-red-500">⚠️ Meme not found!</p>
-          )}
+          <Image
+            src={meme?.url || zoro}
+            alt={meme?.name || "Meme Image"}
+            width={500}
+            height={500}
+            className="w-full rounded-md"
+          />
         </motion.div>
-        <div className="flex flex-row justify-between p-4">
+
+        {/* Action Buttons */}
+        <div className="flex justify-between items-center p-4 relative">
           <button
             onClick={() => dispatch(toggleLike(meme))}
-            className={`w-1/3  px-1 sm:px-6 py-2 text-xs sm:text-sm font-medium rounded-md transition-all ${
-              isLiked
-                ? "bg-red-500 text-white hover:bg-red-600"
-                : "bg-gray-300 dark:bg-gray-600 text-black dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
-            }`}
+            className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-red-500 transition"
           >
-            {isLiked ? "❤️ Liked" : "🤍 Like"}
+            <Heart
+              size={24}
+              className={isLiked ? "fill-red-500 text-red-500" : ""}
+            />
+            <span>{isLiked ? "Liked" : "Like"}</span>
           </button>
 
-          <ShareButtons memeUrl={meme.url} />
+          <button className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-500 transition">
+            <MessageCircle size={24} />
+            <span>Comment</span>
+          </button>
+
+          {/* Share Button & Menu */}
+          <div className="relative">
+            <button
+              onClick={() => setShowShareOptions(!showShareOptions)}
+              className="text-gray-500 dark:text-white hover:text-gray-800 transition"
+            >
+              <Share2 size={24} />
+            </button>
+
+            {showShareOptions && (
+              <div className="absolute bottom-full mb-2 right-0 bg-white dark:bg-gray-900 shadow-md rounded-md p-2 flex gap-3 z-10 max-w-[150px]">
+                <a
+                  href={twitterShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Twitter"
+                >
+                  <Twitter
+                    size={20}
+                    className="text-blue-500 hover:text-blue-600"
+                  />
+                </a>
+                <a
+                  href={facebookShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Facebook"
+                >
+                  <Facebook
+                    size={20}
+                    className="text-blue-700 hover:text-blue-800"
+                  />
+                </a>
+                <button onClick={copyToClipboard} aria-label="Copy link">
+                  <Clipboard
+                    size={20}
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+                  />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-        <p className="px-4 text-gray-800 dark:text-white font-semibold">
-          {meme.name}
+
+        <p className="px-4 pb-4 text-gray-800 dark:text-white font-semibold">
+          {meme?.name}
         </p>
       </div>
 
-      <div className="lg:w-1/3 w-full lg:mt-0 lg:ml-6 ">
-        <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4 lg:h-[80vh] overflow-y-auto sm:mt-32 mt-12">
-          <CommentSection memeId={String(meme.id)} />
+      {/* Comment Section */}
+      <div className="lg:w-1/3 w-full lg:mt-0 lg:ml-6">
+        <div className="bg-white dark:bg-gray-900 shadow-md rounded-xl p-4 lg:h-[80vh] overflow-y-auto">
+          <CommentSection memeId={String(meme?.id || "")} />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

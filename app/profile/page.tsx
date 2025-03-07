@@ -20,8 +20,8 @@ export default function ProfilePage() {
     bio: string;
     avatar: StaticImageData | string;
   }>({
-    name: "Prashanth",
-    bio: "I am a funny guy meme page creating",
+    name: "Roronoa Zoro",
+    bio: "Funny Guy 🗡🗡🗡",
     avatar: "",
   });
   useEffect(() => {
