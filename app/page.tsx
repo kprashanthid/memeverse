@@ -111,13 +111,7 @@ export default function HomePage() {
         }}
       /> */}
       <div className="hidden sm:block sm:min-w-80">
-        <Sidebar
-          onSearch={handleSearch}
-          onSortChange={() => {
-            dispatch(toggleDarkMode());
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        />
+        <Sidebar onSearch={handleSearch} />
       </div>
       <div className="block sm:hidden w-full">
         <Navbar
