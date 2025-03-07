@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { motion, useAnimation } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkMode } from "@/store/themeSlice";
 import { RootState } from "@/store";
@@ -8,6 +7,10 @@ import MemeCard from "../components/MemeCard";
 import { setFetchedMemes } from "@/store/slices/memeSlice";
 import debounce from "lodash.debounce";
 import Navbar from "@/components/Navbar";
+import { AnimatedBackground } from "animated-backgrounds";
+import Sidebar from "@/components/SideBar";
+import ThreeDotsWave from "@/components/ThreeDotWave";
+import clsx from "clsx";
 
 export type Meme = {
   id: string;
@@ -24,8 +27,6 @@ export default function HomePage() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy] = useState<"likes" | "date" | "comments">("likes");
-
-  const controls = useAnimation();
   const dispatch = useDispatch();
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
   const uploadedMemes = useSelector(
@@ -95,58 +96,64 @@ export default function HomePage() {
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen flex flex-col items-center relative"
+    <div
+      className={clsx(
+        darkMode
+          ? "min-h-screen  flex relative sm:flex-row flex-col"
+          : "min-h-screen bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient flex relative sm:flex-row flex-col"
+      )}
     >
-      <Navbar
+      {/* <Navbar
         onSearch={handleSearch}
         onSortChange={() => {
           dispatch(toggleDarkMode());
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
-      />
-      <motion.div
-        initial={{ opacity: 1 }}
-        animate={{
-          background: darkMode
-            ? "linear-gradient(to bottom, #111827, #1f2937, #374151)"
-            : "linear-gradient(to bottom, #ffffff, #f3f4f6, #e5e7eb)",
-        }}
-        transition={{ duration: 1 }}
-        className="absolute inset-0 w-full h-full transition-colors -z-10"
-      />
-      <button
-        onClick={() => {
-          dispatch(toggleDarkMode());
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-        className="fixed top-4 right-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-md shadow-md z-10 hover:bg-gray-300 dark:hover:bg-gray-600"
-      >
-        {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-      </button>
+      /> */}
+      <div className="hidden sm:block sm:min-w-80">
+        <Sidebar
+          onSearch={handleSearch}
+          onSortChange={() => {
+            dispatch(toggleDarkMode());
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+      </div>
+      <div className="block sm:hidden w-full">
+        <Navbar
+          onSearch={handleSearch}
+          onSortChange={() => {
+            dispatch(toggleDarkMode());
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+      </div>
 
-      <h1
-        className={`text-3xl font-bold mt-14 relative z-10 sm:mt-20 ${
-          darkMode && "text-white"
-        }`}
-      >
-        🔥 Trending Memes
-      </h1>
-      <motion.div
-        animate={controls}
-        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:p-10 p-5 relative z-10"
-      >
-        {uploadedMemes.length > 0 &&
-          uploadedMemes.map((meme) => <MemeCard key={meme.id} meme={meme} />)}
-        {filteredMemes.map((meme) => (
-          <MemeCard key={meme.id} meme={meme} />
-        ))}
-      </motion.div>
-
-      {loading && <p className="mt-4 relative z-10">Loading more memes...</p>}
-    </motion.div>
+      {darkMode && (
+        <AnimatedBackground animationName="starryNight" blendMode="Overlay" />
+      )}
+      {/* <div className="absolute inset-0 w-full h-full transition-colors -z-10" /> */}
+      <div className="flex flex-col sm:gap-10 gap-5 sm:px-20 px-5">
+        <h1
+          className={`text-3xl font-bold mt-14 relative z-10 sm:mt-10 ${
+            darkMode && "text-white"
+          }`}
+        >
+          🔥 Trending Memes
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 relative z-10">
+          {uploadedMemes.length > 0 &&
+            uploadedMemes.map((meme) => <MemeCard key={meme.id} meme={meme} />)}
+          {filteredMemes.map((meme) => (
+            <MemeCard key={meme.id} meme={meme} />
+          ))}
+        </div>
+        {loading && (
+          <div className="h-full w-full">
+            <ThreeDotsWave />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

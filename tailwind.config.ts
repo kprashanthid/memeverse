@@ -9,9 +9,19 @@ export default {
   ],
   theme: {
     extend: {
+      animation: {
+        gradient: "gradientMove 6s ease infinite",
+      },
+      keyframes: {
+        gradientMove: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // background: "var(--background)",
+        // foreground: "var(--foreground)",
       },
     },
   },

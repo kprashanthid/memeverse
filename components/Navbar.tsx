@@ -9,8 +9,8 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 type NavbarProps = {
-  onSearch: (query: string) => void;
-  onSortChange: (sortBy: "likes" | "date" | "comments") => void;
+  onSearch?: (query: string) => void;
+  onSortChange?: (sortBy: "likes" | "date" | "comments") => void;
 };
 
 export default function Navbar({ onSearch, onSortChange }: NavbarProps) {
@@ -22,7 +22,7 @@ export default function Navbar({ onSearch, onSortChange }: NavbarProps) {
   const pathname = usePathname();
 
   const debouncedSearch = useMemo(
-    () => debounce((query: string) => onSearch(query.toLowerCase()), 300),
+    () => debounce((query: string) => onSearch?.(query.toLowerCase()), 300),
     [onSearch]
   );
 
@@ -40,7 +40,7 @@ export default function Navbar({ onSearch, onSortChange }: NavbarProps) {
   }, [darkMode]);
 
   return (
-    <nav className="w-full bg-white dark:bg-gray-900 shadow-md py-3 px-6 flex justify-between items-center fixed top-0 z-50">
+    <nav className="w-full dark:bg-black shadow-md py-3 px-6 flex justify-between items-center fixed top-0 z-50">
       <Link href="/">
         <h1 className="text-xl font-bold text-gray-800 dark:text-white">
           MemeVerse 🔥
@@ -60,7 +60,7 @@ export default function Navbar({ onSearch, onSortChange }: NavbarProps) {
             onChange={(e) => {
               const newSort = e.target.value as "likes" | "date" | "comments";
               setSortBy(newSort);
-              onSortChange(newSort);
+              onSortChange?.(newSort);
             }}
             className="p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-white"
           >
@@ -110,7 +110,7 @@ export default function Navbar({ onSearch, onSortChange }: NavbarProps) {
             onChange={(e) => {
               const newSort = e.target.value as "likes" | "date" | "comments";
               setSortBy(newSort);
-              onSortChange(newSort);
+              onSortChange?.(newSort);
             }}
             className="p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-white w-11/12 mb-4"
           >

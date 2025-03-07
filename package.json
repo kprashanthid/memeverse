@@ -11,7 +11,9 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.6.0",
+    "animated-backgrounds": "^1.1.0",
     "axios": "^1.8.1",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.4.7",
     "idb": "^8.0.2",
     "lodash.debounce": "^4.0.8",

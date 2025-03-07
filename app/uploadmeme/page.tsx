@@ -4,31 +4,31 @@ import Navbar from "@/components/Navbar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { motion } from "framer-motion";
+import { AnimatedBackground } from "animated-backgrounds";
+import Sidebar from "@/components/SideBar";
+import clsx from "clsx";
 
 export default function MemeUploadPage() {
   const darkMode = useSelector((state: RootState) => state.theme.darkMode);
-
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen flex flex-col items-center relative"
+      className={clsx(
+        darkMode
+          ? "min-h-screen flex sm:flex-row flex-col items-center relative"
+          : "min-h-screen flex sm:flex-row flex-col items-center relative bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient"
+      )}
     >
-      <Navbar onSearch={() => {}} onSortChange={() => {}} />
+      {darkMode && (
+        <AnimatedBackground animationName="starryNight" blendMode="Overlay" />
+      )}
+      <div className="hidden sm:block sm:min-w-80 h-screen">
+        <Sidebar />
+      </div>
 
-      <motion.div
-        initial={{ opacity: 1 }}
-        animate={{
-          background: darkMode
-            ? "linear-gradient(to bottom, #111827, #1f2937, #374151)"
-            : "linear-gradient(to bottom, #ffffff, #f3f4f6, #e5e7eb)",
-        }}
-        transition={{ duration: 1 }}
-        className="absolute inset-0 w-full h-full transition-colors -z-10"
-      />
-
-      <div className="h-screen flex flex-1 items-center justify-center sm:mx-0 mx-4">
+      <div className="block sm:hidden w-full">
+        <Navbar />
+      </div>
+      <div className="h-screen flex flex-1  flex-row items-center justify-center sm:mx-0 mx-4">
         <MemeUpload />
       </div>
     </motion.div>
