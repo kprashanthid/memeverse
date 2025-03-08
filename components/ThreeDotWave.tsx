@@ -5,8 +5,8 @@ const LoadingDot = {
   display: "block",
   width: "2rem",
   height: "2rem",
-  backgroundColor: "black",
   borderRadius: "50%",
+  background: "linear-gradient(90deg, #ff7eb3, #ff758c, #ff7eb3)",
 };
 
 const LoadingContainer = {

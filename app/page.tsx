@@ -8,7 +8,6 @@ import { setFetchedMemes } from "@/store/slices/memeSlice";
 import debounce from "lodash.debounce";
 import Navbar from "@/components/Navbar";
 import { AnimatedBackground } from "animated-backgrounds";
-
 import ThreeDotsWave from "@/components/ThreeDotWave";
 import clsx from "clsx";
 import Sidebar from "@/components/SideBar";
@@ -24,7 +23,7 @@ export type Meme = {
 
 export default function HomePage() {
   const [memes, setMemes] = useState<Meme[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy] = useState<"likes" | "date" | "comments">("likes");
@@ -34,32 +33,30 @@ export default function HomePage() {
     (state: RootState) => state.memes.uploadedMemes
   );
 
-  // Fetch all memes once on component mount
   const fetchMemes = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("https://api.imgflip.com/get_memes");
-      const data = await res.json();
-      const allFetchedMemes = data.data.memes;
-      setMemes(allFetchedMemes);
-      dispatch(setFetchedMemes(allFetchedMemes));
-    } catch (error) {
-      console.error("Failed to fetch memes:", error);
-    } finally {
-      setLoading(false);
-    }
+    setTimeout(async () => {
+      try {
+        const res = await fetch("https://api.imgflip.com/get_memes");
+        const data = await res.json();
+        const allFetchedMemes = data.data.memes;
+        setMemes(allFetchedMemes);
+        dispatch(setFetchedMemes(allFetchedMemes));
+      } catch (error) {
+        console.error("Failed to fetch memes:", error);
+      } finally {
+        setLoading(false);
+      }
+    }, 2000);
   }, [dispatch]);
 
   useEffect(() => {
     fetchMemes();
   }, [fetchMemes]);
 
-  // Reset page when search query or sort changes
   useEffect(() => {
     setPage(1);
   }, [searchQuery, sortBy]);
 
-  // Combine uploaded and fetched memes, deduplicate
   const allMemes = [...uploadedMemes, ...memes].reduce((acc: Meme[], meme) => {
     if (!acc.some((item) => item.id === meme.id)) {
       acc.push(meme);
@@ -67,7 +64,6 @@ export default function HomePage() {
     return acc;
   }, []);
 
-  // Sort memes
   const sortedMemes = [...allMemes].sort((a, b) => {
     if (sortBy === "likes") return (b.likes || 0) - (a.likes || 0);
     if (sortBy === "date") return (b.date || "").localeCompare(a.date || "");
@@ -75,15 +71,12 @@ export default function HomePage() {
     return 0;
   });
 
-  // Filter memes based on search query
   const filteredMemes = sortedMemes.filter((meme) =>
     meme.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Paginate filtered memes
   const displayedMemes = filteredMemes.slice(0, page * 10);
 
-  // Handle infinite scroll
   const handleScroll = useCallback(() => {
     if (
       window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
@@ -99,7 +92,6 @@ export default function HomePage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Search handler
   const handleSearch = useCallback(
     debounce((query: string) => {
       setSearchQuery(query.toLowerCase());
@@ -131,23 +123,22 @@ export default function HomePage() {
       {darkMode && (
         <AnimatedBackground animationName="starryNight" blendMode="Overlay" />
       )}
-      <div className="flex flex-col sm:gap-10 gap-5 sm:px-20 px-5">
-        <h1
-          className={`text-3xl font-bold mt-14 relative z-10 sm:mt-10 text-white ${
-            darkMode && "text-white"
-          }`}
-        >
+      <div className="flex flex-col sm:gap-10 gap-5 sm:px-20 px-5 w-full">
+        <h1 className="text-3xl font-bold mt-14 relative z-10 sm:mt-10 text-white">
           🔥 Trending Memes
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-4 relative z-10">
-          {displayedMemes.map((meme) => (
-            <MemeCard key={meme.id} meme={meme} />
-          ))}
-        </div>
-        {loading && (
-          <div className="h-full w-full">
+        {loading ? (
+          <div className="h-full w-full flex justify-center items-center">
             <ThreeDotsWave />
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-4 relative z-10">
+              {displayedMemes.map((meme) => (
+                <MemeCard key={meme.id} meme={meme} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
