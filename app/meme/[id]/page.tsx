@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { toggleLike, addFetchedMeme } from "@/store/slices/memeSlice";
 import CommentSection from "@/components/CommentSection";
 import Navbar from "@/components/Navbar";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import {
   Facebook,

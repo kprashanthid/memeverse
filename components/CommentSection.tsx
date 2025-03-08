@@ -7,7 +7,8 @@ export default function CommentSection({ memeId }: { memeId: string }) {
   const [comments, setComments] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const savedProfile = localStorage.getItem("userProfile");
-  const [user, setUser] = useState<{ name: string; avatar: string } | null>(
+
+  const [user] = useState<{ name: string; avatar: string } | null>(
     savedProfile ? JSON.parse(savedProfile) : null
   );
 
