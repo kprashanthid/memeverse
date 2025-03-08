@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
+import zoro from "../app/profile/zoro.jpg";
+import Image from "next/image";
 
 export default function CommentSection({ memeId }: { memeId: string }) {
   const [comments, setComments] = useState<string[]>([]);
@@ -27,7 +29,6 @@ export default function CommentSection({ memeId }: { memeId: string }) {
   return (
     <div className="mt-4 bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center space-x-2 border-b pb-2">
-        <img src="/profile.jpg" alt="User" className="w-8 h-8 rounded-full" />
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -45,8 +46,8 @@ export default function CommentSection({ memeId }: { memeId: string }) {
       <div className="mt-2 space-y-2">
         {comments.map((c, i) => (
           <div key={i} className="flex items-start space-x-2">
-            <img
-              src={user?.avatar}
+            <Image
+              src={user?.avatar && user?.avatar !== "" ? user.avatar : zoro}
               alt="User"
               className="w-6 h-6 rounded-full"
             />
