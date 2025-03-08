@@ -58,10 +58,10 @@ export default function ProfilePage() {
         className={clsx(
           darkMode
             ? "min-h-screen w-full"
-            : "min-h-screen  bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient"
+            : "min-h-screen bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient"
         )}
       >
-        <div className="flex flex-row flex-1 w-full">
+        <div className="flex sm:flex-row flex-col flex-1 w-full">
           <div className="hidden sm:block sm:min-w-80 h-screen">
             <Sidebar />
           </div>
@@ -74,8 +74,14 @@ export default function ProfilePage() {
               blendMode="Overlay"
             />
           )}
-          <div className=" p-6 text-center w-full">
-            <div className="flex flex-1 items-center sm:gap-24 gap-5 justify-center">
+          <div className="p-6 text-center w-full mt-14 sm:mt-0">
+            <div
+              className={clsx(
+                darkMode
+                  ? "flex flex-1 items-center sm:gap-24 gap-5 justify-center border-white border-2 py-5 rounded-lg shadow-2xl"
+                  : "flex flex-1 items-center sm:gap-24 gap-5 justify-center bg-white py-5 rounded-lg shadow-2xl bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient"
+              )}
+            >
               <label htmlFor="avatar-upload" className="cursor-pointer">
                 {profile.avatar ? (
                   <Image

@@ -63,19 +63,19 @@ export default function LeaderboardPage() {
         <AnimatedBackground animationName="starryNight" blendMode="Overlay" />
       )}
       <div className="flex flex-col w-full h-screen items-center">
-        <h1 className="text-3xl font-bold mt-20">🏆 Leaderboard</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Top 10 Most Liked Memes
-        </p>
+        <h1 className="text-3xl font-bold mt-20 text-white sm:mb-5 mb-2 text-center">
+          🏆 Leaderboard
+        </h1>
+        <p className="text-white text-center ml-5">Top 10 Most Liked Memes</p>
 
         {leaderboard.length === 0 ? (
           <p className="mt-4">No likes yet! Start liking memes!</p>
         ) : (
-          <div className="mt-6 w-full max-w-lg">
+          <div className="mt-6 w-full max-w-lg sm:px-0 px-5">
             {leaderboard.map((meme, index) => (
               <div
                 key={meme.id}
-                className="flex items-center bg-white dark:bg-gray-800 p-3 rounded-lg shadow-2xl mb-2"
+                className="flex items-center border-white border-2 text-white dark:bg-gray-800 py-2 px-2 rounded-lg shadow-2xl mb-2"
               >
                 <span className="text-xl font-bold w-8">{index + 1}.</span>
                 <Image
