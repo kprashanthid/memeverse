@@ -129,7 +129,7 @@ export default function HomePage() {
       {/* <div className="absolute inset-0 w-full h-full transition-colors -z-10" /> */}
       <div className="flex flex-col sm:gap-10 gap-5 sm:px-20 px-5">
         <h1
-          className={`text-3xl font-bold mt-14 relative z-10 sm:mt-10 ${
+          className={`text-3xl font-bold mt-14 relative z-10 sm:mt-10 text-white ${
             darkMode && "text-white"
           }`}
         >

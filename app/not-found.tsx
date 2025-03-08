@@ -1,31 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import memeImage from "./meme.png";
 import Link from "next/link";
 import Image from "next/image";
 
-const memes = [
-  {
-    url: memeImage.src,
-    caption: "When you realize this page doesn't exist... 😭",
-  },
-  { url: memeImage.src, caption: "404? More like 4-oh-no! 😂" },
-  {
-    url: memeImage.src,
-    caption: "This page is as lost as me in math class. 🤯",
-  },
-];
-
 export default function NotFoundPage() {
-  const router = useRouter();
-  const [randomMeme, setRandomMeme] = useState(memes[0]);
-
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * memes.length);
-    setRandomMeme(memes[randomIndex]);
-  }, []);
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
       <section className="flex flex-col items-center justify-center min-h-screen bg-white font-serif p-10">
@@ -43,7 +20,7 @@ export default function NotFoundPage() {
           />
           <div className="mt-[-50px]">
             <h3 className="text-3xl font-semibold text-gray-800">
-              Look like you're lost
+              Look like you&apos;re lost
             </h3>
             <p className="text-gray-600 mt-2">
               The page you are looking for is not available!
