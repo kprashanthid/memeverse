@@ -78,8 +78,8 @@ export default function ProfilePage() {
             <div
               className={clsx(
                 darkMode
-                  ? "flex flex-1 items-center sm:gap-24 gap-5 justify-center border-white border-2 py-5 rounded-lg shadow-2xl"
-                  : "flex flex-1 items-center sm:gap-24 gap-5 justify-center bg-white py-5 rounded-lg shadow-2xl bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient"
+                  ? "flex flex-1 items-center sm:gap-24 gap-5 justify-center text-white border-white border-2 py-5 rounded-lg shadow-2xl"
+                  : "flex flex-1 items-center sm:gap-24 gap-5 justify-center text-white bg-white py-5 rounded-lg shadow-2xl bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient"
               )}
             >
               <label htmlFor="avatar-upload" className="cursor-pointer">

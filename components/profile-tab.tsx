@@ -60,7 +60,7 @@ export default function ProfileTable() {
                 {likedMemes.length === 0 ? (
                   <p className="text-center text-gray-500">No posts yet.</p>
                 ) : (
-                  <div className="grid sm:grid-cols-4 grid-cols-1 gap-1 md:gap-4 mt-4">
+                  <div className="grid sm:grid-cols-4 grid-cols-1 gap-4 md:gap-4 mt-4">
                     {likedMemes.map((meme) => (
                       <div key={meme.id} className="relative group">
                         <div className="bg-white rounded-lg p-5 flex flex-col gap-5">

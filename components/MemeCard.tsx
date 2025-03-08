@@ -56,7 +56,7 @@ export default function MemeCard({ meme }: { meme: Meme }) {
             alt={meme.name}
             width={500}
             height={500}
-            className="w-full h-52 cursor-pointer sm:h-[300px] rounded-md"
+            className="w-full  cursor-pointer h-[300px] rounded-md aspect-auto object-cover"
           />
         </div>
       </Link>
