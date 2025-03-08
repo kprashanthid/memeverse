@@ -44,19 +44,21 @@ export default function MemeCard({ meme }: { meme: Meme }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-white dark:bg-black rounded-lg shadow-md w-full max-w-md mx-auto"
+      className="bg-white dark:bg-black dark:border-white dark:border-2 rounded-lg shadow-md w-full max-w-md mx-auto"
     >
       <div className="p-3 flex items-center justify-between">
         <p className="font-semibold">{meme.name}</p>
       </div>
       <Link href={`/meme/${meme.id}`}>
-        <Image
-          src={meme.url}
-          alt={meme.name}
-          width={500}
-          height={500}
-          className="w-full h-52 cursor-pointer sm:h-[300px]"
-        />
+        <div className="px-1 rounded-md">
+          <Image
+            src={meme.url}
+            alt={meme.name}
+            width={500}
+            height={500}
+            className="w-full h-52 cursor-pointer sm:h-[300px] rounded-md"
+          />
+        </div>
       </Link>
       <div className="p-3 flex items-center gap-4 relative">
         <button onClick={() => dispatch(toggleLike(meme))}>
