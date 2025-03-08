@@ -8,9 +8,10 @@ import { setFetchedMemes } from "@/store/slices/memeSlice";
 import debounce from "lodash.debounce";
 import Navbar from "@/components/Navbar";
 import { AnimatedBackground } from "animated-backgrounds";
-import Sidebar from "@/components/SideBar";
+
 import ThreeDotsWave from "@/components/ThreeDotWave";
 import clsx from "clsx";
+import Sidebar from "@/components/SideBar";
 
 export type Meme = {
   id: string;
@@ -33,50 +34,72 @@ export default function HomePage() {
     (state: RootState) => state.memes.uploadedMemes
   );
 
-  const fetchMemes = async () => {
-    if (loading) return;
+  // Fetch all memes once on component mount
+  const fetchMemes = useCallback(async () => {
     setLoading(true);
-
     try {
       const res = await fetch("https://api.imgflip.com/get_memes");
       const data = await res.json();
-      const newMemes = data.data.memes.slice(page * 10 - 10, page * 10);
-
-      if (newMemes.length > 0) {
-        const uniqueMemes = [...memes, ...newMemes].reduce((acc, meme) => {
-          if (!acc.some((item: { id: string }) => item.id === meme.id)) {
-            acc.push(meme);
-          }
-          return acc;
-        }, [] as Meme[]);
-
-        setMemes(uniqueMemes);
-        dispatch(setFetchedMemes(uniqueMemes));
-      }
+      const allFetchedMemes = data.data.memes;
+      setMemes(allFetchedMemes);
+      dispatch(setFetchedMemes(allFetchedMemes));
     } catch (error) {
       console.error("Failed to fetch memes:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     fetchMemes();
-  }, [page]);
+  }, [fetchMemes]);
 
-  const handleScroll = () => {
+  // Reset page when search query or sort changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, sortBy]);
+
+  // Combine uploaded and fetched memes, deduplicate
+  const allMemes = [...uploadedMemes, ...memes].reduce((acc: Meme[], meme) => {
+    if (!acc.some((item) => item.id === meme.id)) {
+      acc.push(meme);
+    }
+    return acc;
+  }, []);
+
+  // Sort memes
+  const sortedMemes = [...allMemes].sort((a, b) => {
+    if (sortBy === "likes") return (b.likes || 0) - (a.likes || 0);
+    if (sortBy === "date") return (b.date || "").localeCompare(a.date || "");
+    if (sortBy === "comments") return (b.comments || 0) - (a.comments || 0);
+    return 0;
+  });
+
+  // Filter memes based on search query
+  const filteredMemes = sortedMemes.filter((meme) =>
+    meme.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Paginate filtered memes
+  const displayedMemes = filteredMemes.slice(0, page * 10);
+
+  // Handle infinite scroll
+  const handleScroll = useCallback(() => {
     if (
       window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
-      !loading
+      !loading &&
+      displayedMemes.length < filteredMemes.length
     ) {
       setPage((prev) => prev + 1);
     }
-  };
+  }, [loading, displayedMemes.length, filteredMemes.length]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+
+  // Search handler
   const handleSearch = useCallback(
     debounce((query: string) => {
       setSearchQuery(query.toLowerCase());
@@ -84,32 +107,14 @@ export default function HomePage() {
     []
   );
 
-  const sortedMemes = [...memes].sort((a, b) => {
-    if (sortBy === "likes") return (b.likes || 0) - (a.likes || 0);
-    if (sortBy === "date") return (b.date || "").localeCompare(a.date || "");
-    if (sortBy === "comments") return (b.comments || 0) - (a.comments || 0);
-    return 0;
-  });
-
-  const filteredMemes = sortedMemes.filter((meme) =>
-    meme.name.toLowerCase().includes(searchQuery)
-  );
-
   return (
     <div
       className={clsx(
         darkMode
-          ? "min-h-screen  flex relative sm:flex-row flex-col"
+          ? "min-h-screen flex relative sm:flex-row flex-col"
           : "min-h-screen bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] bg-[length:200%_200%] animate-gradient flex relative sm:flex-row flex-col"
       )}
     >
-      {/* <Navbar
-        onSearch={handleSearch}
-        onSortChange={() => {
-          dispatch(toggleDarkMode());
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-      /> */}
       <div className="hidden sm:block sm:min-w-80">
         <Sidebar onSearch={handleSearch} />
       </div>
@@ -126,7 +131,6 @@ export default function HomePage() {
       {darkMode && (
         <AnimatedBackground animationName="starryNight" blendMode="Overlay" />
       )}
-      {/* <div className="absolute inset-0 w-full h-full transition-colors -z-10" /> */}
       <div className="flex flex-col sm:gap-10 gap-5 sm:px-20 px-5">
         <h1
           className={`text-3xl font-bold mt-14 relative z-10 sm:mt-10 text-white ${
@@ -136,9 +140,7 @@ export default function HomePage() {
           🔥 Trending Memes
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 relative z-10">
-          {uploadedMemes.length > 0 &&
-            uploadedMemes.map((meme) => <MemeCard key={meme.id} meme={meme} />)}
-          {filteredMemes.map((meme) => (
+          {displayedMemes.map((meme) => (
             <MemeCard key={meme.id} meme={meme} />
           ))}
         </div>
